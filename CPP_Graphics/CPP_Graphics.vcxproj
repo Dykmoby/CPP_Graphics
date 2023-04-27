@@ -135,7 +135,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\event_handler.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\planets\planet.cpp" />
+    <ClCompile Include="src\planets\planets.cpp" />
+    <ClCompile Include="src\render\renderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\event_handler.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\planets\planet.h" />
+    <ClInclude Include="src\planets\planets.h" />
+    <ClInclude Include="src\render\renderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

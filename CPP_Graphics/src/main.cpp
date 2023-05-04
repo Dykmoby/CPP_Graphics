@@ -6,6 +6,8 @@
 #include "event_handler.h"
 #include "render/renderer.h"
 
+#include "planets/planets.h"
+
 using namespace sf;
 
 int main()
@@ -16,18 +18,32 @@ int main()
 
 void Program::start()
 {
-    RenderWindow window(VideoMode(WIDTH, HEIGHT), "CPP_Graphics");
-    Image image;
-    image.create(WIDTH, HEIGHT, Color::Black);
+    mainImage.create(WIDTH, HEIGHT, Color::Black);
 
-    int x = 100;
-    int y = 100;
-    Color color(255, 0, 0);
-    image.setPixel(x, y, color);
+    stopCalculateFlag = false;
 
-    while (window.isOpen())
+    std::thread calculateThread(calculateCycle);
+
+    while (mainWindow.isOpen())
     {
-        EventHandler::handleEvents(window);
-        Renderer::drawImage(window, image);
+        EventHandler::handleEvents(mainWindow);
+
+        if (frameIsReady == true)
+        {
+            Renderer::drawImage(mainWindow, mainImage);
+            frameIsReady = false;
+        }
+    }
+
+    calculateThread.join();
+}
+
+void Program::calculateCycle()
+{
+    Planets::init(500);
+
+    while (stopCalculateFlag != true)
+    {
+        Planets::calculate();
     }
 }

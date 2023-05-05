@@ -17,7 +17,6 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
 
 # Fortran module files
 *.mod
@@ -27,7 +26,6 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
@@ -70,6 +68,7 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+!SFML-2.5.1/bin/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/

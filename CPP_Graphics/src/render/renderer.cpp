@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "renderer.h"
 
 using namespace sf;
@@ -12,8 +14,18 @@ void Renderer::drawImage(RenderWindow &window, Image image)
     drawSprite(window, sprite);
 }
 
-void Renderer::drawImages(RenderWindow& window, Image* images, int imageCount)
+void Renderer::drawImages(RenderWindow& window, std::vector<Image> imagesVector)
 {
+    window.clear();
+    for (Image image : imagesVector)
+    {
+        Texture texture;
+        Sprite sprite;
+        texture.loadFromImage(image);
+        sprite.setTexture(texture);
+        window.draw(sprite);
+    }
+    window.display();
 }
 
 void Renderer::drawSprite(RenderWindow& window, Sprite sprite)

@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 #include <atomic>
+#include <vector>
+#include <iostream>
 
 #include "main.h"
 #include "event_handler.h"
@@ -10,40 +12,46 @@
 
 using namespace sf;
 
+Image mainImage;
+
 int main()
 {
-    Program::start();
-    return 0;
+	Program::start();
+	return 0;
 }
 
 void Program::start()
 {
-    mainImage.create(WIDTH, HEIGHT, Color::Black);
+	mainImage.create(WIDTH, HEIGHT, Color::Color(2, 5, 20));
 
-    stopCalculateFlag = false;
+	stopCalculateFlag = false;
 
-    std::thread calculateThread(calculateCycle);
+	std::thread calculateThread(calculateCycle);
 
-    while (mainWindow.isOpen())
-    {
-        EventHandler::handleEvents(mainWindow);
+	while (mainWindow.isOpen())
+	{
+		EventHandler::handleEvents(mainWindow);
 
-        if (frameIsReady == true)
-        {
-            Renderer::drawImage(mainWindow, mainImage);
-            frameIsReady = false;
-        }
-    }
+		if (frameIsReady == true)
+		{
+			images.insert(images.begin(), mainImage);
+			Renderer::drawImages(mainWindow, images);
 
-    calculateThread.join();
+			std::this_thread::sleep_for(std::chrono::milliseconds(16));
+			frameIsReady = false;
+			images.clear();
+		}
+	}
+
+	calculateThread.join();
 }
 
 void Program::calculateCycle()
 {
-    Planets::init(500);
-
-    while (stopCalculateFlag != true)
-    {
-        Planets::calculate();
-    }
+	Planets::useDeltaTime = true;
+	Planets::init(2000);
+	while (stopCalculateFlag != true)
+	{
+		Planets::calculate();
+	}
 }

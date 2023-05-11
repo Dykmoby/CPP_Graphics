@@ -156,7 +156,6 @@
   <ItemGroup>
     <ClCompile Include="src\event_handler.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\planets\planet.cpp" />
     <ClCompile Include="src\planets\planets.cpp" />
     <ClCompile Include="src\render\renderer.cpp" />
     <ClCompile Include="src\utils.cpp" />
@@ -164,7 +163,6 @@
   <ItemGroup>
     <ClInclude Include="src\event_handler.h" />
     <ClInclude Include="src\main.h" />
-    <ClInclude Include="src\planets\planet.h" />
     <ClInclude Include="src\planets\planets.h" />
     <ClInclude Include="src\render\renderer.h" />
     <ClInclude Include="src\utils.h" />

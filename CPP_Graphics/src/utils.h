@@ -1,6 +1,6 @@
 #pragma once
 
-static class Utils
+class Utils
 {
 public:
 	static int getRandomNumber(int from, int to);
@@ -19,6 +19,7 @@ public:
 		Vector2f operator+(const Vector2f &vector) const;
 
 		static float distance(Vector2f vector1, Vector2f vector2);
+		static float distanceSqr(Vector2f vector1, Vector2f vector2);
 
 		static Vector2f direction(Vector2f vector1, Vector2f vector2);
 

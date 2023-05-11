@@ -7,7 +7,7 @@
 int Utils::getRandomNumber(int from, int to)
 {
 	std::uniform_int_distribution<> dis(from, to);
-	std::mt19937 rnd(std::chrono::steady_clock::now().time_since_epoch().count());
+	std::mt19937 rnd((unsigned int) std::chrono::steady_clock::now().time_since_epoch().count());
 	return dis(rnd);
 }
 
@@ -39,6 +39,13 @@ float Utils::Vector2f::distance(Vector2f vector1, Vector2f vector2)
 	float dx = vector2.x - vector1.x;
 	float dy = vector2.y - vector1.y;
 	return sqrt(dx * dx + dy * dy);
+}
+
+float Utils::Vector2f::distanceSqr(Vector2f vector1, Vector2f vector2)
+{
+	float dx = vector2.x - vector1.x;
+	float dy = vector2.y - vector1.y;
+	return dx * dx + dy * dy;
 }
 
 Utils::Vector2f Utils::Vector2f::direction(Vector2f vector1, Vector2f vector2)

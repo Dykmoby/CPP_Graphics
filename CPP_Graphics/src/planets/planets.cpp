@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "planets.h"
-#include "planet.h"
 #include "../utils.h"
 #include "../main.h"
 
@@ -13,6 +12,8 @@ Planet* planets;
 unsigned int planetCount = 0;
 
 const float G = 6.6743015E-11f;
+
+unsigned int maxInteractionDistanceSqr = pow(200, 2); // distance must be squared
 
 auto start_time = std::chrono::high_resolution_clock::now();
 auto current_time = std::chrono::high_resolution_clock::now();
@@ -30,8 +31,10 @@ void Planets::init(int planetCount)
 
 	for (int i = 0; i < planetCount; i++)
 	{
-		planets[i].pos.x = (float) Utils::getRandomNumber(0, WIDTH - 1);
-		planets[i].pos.y = (float) Utils::getRandomNumber(0, HEIGHT - 1);
+		planets[i].pos.x = (float)Utils::getRandomNumber(0, WIDTH - 1);
+		planets[i].pos.y = (float)Utils::getRandomNumber(0, HEIGHT - 1);
+
+		planets[i].radius = (float)Utils::getRandomNumber(1, 8);
 	}
 }
 
@@ -54,13 +57,13 @@ void Planets::calculate()
 				continue;
 			}
 
-			float distance = Utils::Vector2f::distance(planets[i].pos, planets[k].pos);
+			float distanceSqr = Utils::Vector2f::distanceSqr(planets[i].pos, planets[k].pos);
 
-			if (distance >= 100)
+			if (distanceSqr > maxInteractionDistanceSqr)
 			{
 				continue;
 			}
-			else if (distance < planets[i].radius + planets[k].radius)
+			else if (distanceSqr < planets[i].radius + planets[k].radius)
 			{
 				// delete planet
 				continue;
@@ -69,7 +72,7 @@ void Planets::calculate()
 			Utils::Vector2f direction = Utils::Vector2f::direction(planets[i].pos, planets[k].pos);
 			direction.normalize();
 
-			float velocity = (float) (10000000000 * G * planets[k].mass / (distance * distance));
+			float velocity = (float) (10000000000 * G * planets[k].mass / distanceSqr);
 
 			if (Planets::useDeltaTime)
 			{
@@ -93,20 +96,35 @@ void Planets::calculate()
 
 	if (frameIsReady == false)
 	{
-		sf::Image image;
-		image.create(WIDTH, HEIGHT, sf::Color::Color(255, 255, 255, 0));
+		drawFrame();
+	}
+}
 
-		for (unsigned int i = 0; i < planetCount; i++)
+void Planets::drawFrame()
+{
+	sf::Image image;
+	image.create(WIDTH, HEIGHT, sf::Color::Color(255, 255, 255, 0));
+
+	for (unsigned int i = 0; i < planetCount; i++)
+	{
+		sf::Color color(255, 255, 255);
+		if (planets[i].pos.x + planets[i].radius > 0 && planets[i].pos.x + planets[i].radius < WIDTH && planets[i].pos.y + planets[i].radius > 0 && planets[i].pos.y + planets[i].radius < HEIGHT)
 		{
-			sf::Color color(255, 255, 255);
-			if (planets[i].pos.x > 0 && planets[i].pos.x < WIDTH && planets[i].pos.y > 0 && planets[i].pos.y < HEIGHT)
-			{
-				image.setPixel((unsigned int) planets[i].pos.x, (unsigned int) planets[i].pos.y, color);
+			float radiusSqr = planets[i].radius * planets[i].radius;
+			for (int y = (int) -planets[i].radius; y <= planets[i].radius; y++) {
+				for (int x = (int) -planets[i].radius; x <= planets[i].radius; x++) {
+					if (x * x + y * y <= radiusSqr) {
+						//image.setPixel((unsigned int)planets[i].pos.x, (unsigned int)planets[i].pos.y, color);
+						if (x + planets[i].pos.x > 0 && x + planets[i].pos.x < WIDTH && y + planets[i].pos.y > 0 && y + planets[i].pos.y < HEIGHT)
+						{
+							image.setPixel(x + planets[i].pos.x, y + planets[i].pos.y, color);
+						}
+					}
+				}
 			}
 		}
-
-		images.push_back(image);
 	}
 
+	images.push_back(image);
 	frameIsReady = true;
 }

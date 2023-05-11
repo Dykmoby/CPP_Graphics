@@ -49,7 +49,7 @@ void Program::start()
 void Program::calculateCycle()
 {
 	Planets::useDeltaTime = true;
-	Planets::init(2000);
+	Planets::init(1000);
 	while (stopCalculateFlag != true)
 	{
 		Planets::calculate();

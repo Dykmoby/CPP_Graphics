@@ -33,9 +33,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\planets\planet.cpp">
-      <Filter>Source Files\Planets</Filter>
-    </ClCompile>
     <ClCompile Include="src\planets\planets.cpp">
       <Filter>Source Files\Planets</Filter>
     </ClCompile>
@@ -52,9 +49,6 @@
     </ClInclude>
     <ClInclude Include="src\event_handler.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\planets\planet.h">
-      <Filter>Header Files\Planets</Filter>
     </ClInclude>
     <ClInclude Include="src\planets\planets.h">
       <Filter>Header Files\Planets</Filter>

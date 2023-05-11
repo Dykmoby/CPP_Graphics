@@ -12,7 +12,7 @@ inline std::atomic<bool> frameIsReady = false;
 inline std::vector<sf::Image> images;
 inline sf::RenderWindow mainWindow(sf::VideoMode(WIDTH, HEIGHT), "CPP_Graphics");
 
-static class Program
+class Program
 {
 public:
     static void start();

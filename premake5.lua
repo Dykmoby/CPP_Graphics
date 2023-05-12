@@ -32,6 +32,8 @@ project "CPP_Graphics"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	
+	debugdir ("bin/" .. outputdir .. "/%{prj.name}")
 
 	files {
 		"%{prj.name}/src/**.h",
@@ -75,6 +77,8 @@ project "CPP_Graphics"
 		postbuildcommands {
 			'{COPYFILE} "../vendor/SFML/bin/openal32.dll" "%{cfg.targetdir}/"',
 			'{COPYFILE} "../vendor/SFML/bin/**-d-2.dll" "%{cfg.targetdir}/"',
+			'{MKDIR} "%{cfg.targetdir}/fonts/"',
+			'{COPYFILE} "../vendor/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
 		}
 		libSuffix = "-d"
 		links { 
@@ -88,6 +92,8 @@ project "CPP_Graphics"
 		postbuildcommands {
 			'{COPYFILE} "../vendor/SFML/bin/openal32.dll" "%{cfg.targetdir}/"',
 			'{COPYFILE} "../vendor/SFML/bin/**-2.dll" "%{cfg.targetdir}/"',
+			'{MKDIR} "%{cfg.targetdir}/fonts/"',
+			'{COPYFILE} "../vendor/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
 			--'{DELETE} "{cfg.targetdir}/**-d-2.dll"',
 		}
 		libSuffix = ""

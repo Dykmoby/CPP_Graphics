@@ -2,6 +2,8 @@
 
 namespace Math
 {
+	const float PI = 3.1415926536;
+
 	class Vector2f
 	{
 	public:
@@ -14,6 +16,7 @@ namespace Math
 
 		Vector2f& operator=(const Vector2f& vector);
 		Vector2f operator*(float num) const;
+		Vector2f operator/(float num) const;
 		Vector2f operator+(const Vector2f& vector) const;
 		Vector2f operator-(const Vector2f& vector) const;
 		Vector2f operator-() const;

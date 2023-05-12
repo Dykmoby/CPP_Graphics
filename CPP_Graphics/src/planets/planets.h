@@ -16,4 +16,6 @@ struct Planet {
 	Math::Vector2f vel;
 	float mass = 1;
 	float radius = 1;
+
+	bool destroyed = false;
 };

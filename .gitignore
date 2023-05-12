@@ -66,9 +66,6 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
-!SFML-2.5.1/bin/
-[Oo]bj/
 [Ll]og/
 [Ll]ogs/
 
@@ -440,8 +437,8 @@ FodyWeavers.xsd
 
 # Visual Studio Solutions
 .vs
-bin
-bin-int
+/bin
+/bin-int
 *.sln
 *.vcxproj
 *.vcxproj.filters

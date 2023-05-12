@@ -38,6 +38,11 @@ namespace Math
 		return Vector2f(num * x, num * y);
 	}
 
+	Vector2f Vector2f::operator/(float num) const
+	{
+		return Vector2f(x / num, y / num);
+	}
+
 	Vector2f Vector2f::operator+(const Vector2f& vector) const
 	{
 		return Vector2f(vector.x + x, vector.y + y);

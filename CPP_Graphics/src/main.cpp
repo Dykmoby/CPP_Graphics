@@ -6,13 +6,17 @@
 
 #include "main.h"
 #include "event_handler.h"
-#include "render/renderer.h"
+#include "Rendering/renderer.h"
 
 #include "planets/planets.h"
 
 using namespace sf;
 
 Image mainImage;
+
+auto start_time = std::chrono::high_resolution_clock::now();
+auto current_time = std::chrono::high_resolution_clock::now();
+float deltaTime = 0.0f;
 
 int main()
 {
@@ -37,10 +41,10 @@ void Program::start()
 			images.insert(images.begin(), mainImage);
 			Renderer::drawImages(mainWindow, images);
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(16));
 			frameIsReady = false;
 			images.clear();
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 	}
 
 	calculateThread.join();
@@ -48,10 +52,13 @@ void Program::start()
 
 void Program::calculateCycle()
 {
-	Planets::useDeltaTime = true;
-	Planets::init(1000);
+	Planets::init(10000);
 	while (stopCalculateFlag != true)
 	{
-		Planets::calculate();
+		start_time = std::chrono::high_resolution_clock::now();
+		Planets::calculate(deltaTime);
+		current_time = std::chrono::high_resolution_clock::now();
+		deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
+		std::cout << (1.0 / deltaTime) << " (" <<  deltaTime << ")" << "\n";
 	}
 }

@@ -1,12 +1,7 @@
-#include <thread>
-#include <iostream>
-#include <string>
-#include <intrin.h>
-#include <vector>
-
 #include "planets.h"
-#include "../utils.h"
-#include "../main.h"
+#include "utils.h"
+#include "main.h"
+#include <omp.h>
 
 Planet* planets;
 unsigned int planetCount = 0;
@@ -15,9 +10,6 @@ const float G = 6.6743015E-11f;
 
 unsigned int maxInteractionDistanceSqr = pow(200, 2); // distance must be squared
 
-auto start_time = std::chrono::high_resolution_clock::now();
-auto current_time = std::chrono::high_resolution_clock::now();
-float deltaTime = 0.0f;
 
 void Planets::init(int planetCount)
 {
@@ -35,49 +27,40 @@ void Planets::init(int planetCount)
 		planets[i].pos.y = (float)Utils::getRandomNumber(0, HEIGHT - 1);
 
 		planets[i].radius = (float)Utils::getRandomNumber(1, 8);
+		planets[i].mass = 1.9 * 1027 * 1000; // Yupiters * 1000
 	}
 }
 
-void Planets::calculate()
+void Planets::calculate(float deltaTime)
 {
-	if (Planets::useDeltaTime)
+#pragma omp parallel for
+	for (int i = 0; i < planetCount; i++)
 	{
-		current_time = std::chrono::high_resolution_clock::now();
-		deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
-		std::cout << deltaTime << "\n";
-		start_time = current_time;
-	}
-
- 	for (unsigned int i = 0; i < planetCount; i++)
-	{
-		for (unsigned int k = 0; k < planetCount; k++)
+		for (int k = 0; k < planetCount; k++)
 		{
 			if (i == k)
 			{
 				continue;
 			}
 
-			float distanceSqr = Utils::Vector2f::distanceSqr(planets[i].pos, planets[k].pos);
+			Math::Vector2f delta = planets[i].pos - planets[k].pos;
 
-			if (distanceSqr > maxInteractionDistanceSqr)
-			{
-				continue;
-			}
-			else if (distanceSqr < planets[i].radius + planets[k].radius)
+			float distanceSqr = Math::Vector2f::dot(delta, delta);
+
+			// Collision
+			if (distanceSqr < (planets[i].radius + planets[k].radius) * (planets[i].radius + planets[k].radius))
 			{
 				// delete planet
 				continue;
 			}
 
-			Utils::Vector2f direction = Utils::Vector2f::direction(planets[i].pos, planets[k].pos);
+			float invDistanceSqr = 1.0f / distanceSqr;
+			Math::Vector2f direction = -delta;
 			direction.normalize();
 
-			float velocity = (float) (10000000000 * G * planets[k].mass / distanceSqr);
+			float velocity = (float) (G * planets[k].mass * planets[i].mass * invDistanceSqr);
 
-			if (Planets::useDeltaTime)
-			{
-				velocity *= deltaTime;
-			}
+			velocity *= deltaTime;
 
 			planets[i].vel = planets[i].vel + direction * velocity;
 			if (planets[i].vel.x == INFINITY || planets[i].vel.y == INFINITY)
@@ -88,7 +71,8 @@ void Planets::calculate()
 		}
 	}
 
-	for (unsigned int i = 0; i < planetCount; i++)
+#pragma omp parallel for
+	for (int i = 0; i < planetCount; i++)
 	{
 		planets[i].pos.x += planets[i].vel.x;
 		planets[i].pos.y += planets[i].vel.y;

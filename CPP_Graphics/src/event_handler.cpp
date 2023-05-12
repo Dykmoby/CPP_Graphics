@@ -1,14 +1,12 @@
 #include "event_handler.h"
 #include "main.h"
 
-using namespace sf;
-
-void EventHandler::handleEvents(RenderWindow &window)
+void EventHandler::handleEvents(sf::RenderWindow &window)
 {
-    Event event;
+    sf::Event event;
     while (window.pollEvent(event))
     {
-        if (event.type == Event::Closed)
+        if (event.type == sf::Event::Closed)
         {
             Program::stopCalculateFlag = true;
             window.close();

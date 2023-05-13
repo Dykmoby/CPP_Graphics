@@ -2,8 +2,6 @@
 
 namespace Math
 {
-	const float PI = 3.1415926536;
-
 	class Vector2f
 	{
 	public:

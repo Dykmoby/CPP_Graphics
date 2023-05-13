@@ -7,8 +7,7 @@
 #include "main.h"
 #include "event_handler.h"
 #include "Rendering/renderer.h"
-#include "Rendering/layer.h"
-#include "utils.h"
+#include "Utils/Timer.h"
 
 #include "planets/planets.h"
 
@@ -21,55 +20,29 @@ Text displayFPSText;
 
 float simulationDeltaTime = 0.0f;
 
-auto lastDisplayTime = std::chrono::high_resolution_clock::now();
 float displayDeltaTime = 0.0f;
+
+std::thread physicsThread;
 
 int main()
 {
-	Program::start();
+	Program::Start();
 	return 0;
 }
 
-void Program::start()
+void Program::Start()
 {
-	init();
+	Init();
 
-	std::thread calculateThread(calculateCycle);
+	physicsThread = std::thread(PhysicsLoop);
 
-	while (mainWindow.isOpen())
-	{
-		EventHandler::handleEvents(mainWindow);
+	RenderLoop();
+	
 
-		if (frameIsReady == true)
-		{
-			layers.insert(layers.begin(), new LayerImage(mainImage));
-
-			simulationFPSText.setString(std::to_string((int) (1.0f / simulationDeltaTime)));
-			layers.push_back(new LayerText(simulationFPSText));
-
-			auto currentTime = std::chrono::high_resolution_clock::now();
-			displayDeltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastDisplayTime).count();
-			displayFPSText.setString(std::to_string((int)(1.0f / displayDeltaTime)));
-			layers.push_back(new LayerText(displayFPSText));
-
-			Renderer::displayLayers(mainWindow, layers);
-			lastDisplayTime = std::chrono::high_resolution_clock::now();
-
-			for (Layer* layer : layers)
-			{
-				layer->~Layer();
-			}
-
-			frameIsReady = false;
-			layers.clear();
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(16));
-	}
-
-	calculateThread.join();
+	physicsThread.join();
 }
 
-void Program::init()
+void Program::Init()
 {
 	mainImage.create(WIDTH, HEIGHT, Color::Color(2, 5, 20));
 
@@ -87,12 +60,59 @@ void Program::init()
 	stopCalculateFlag = false;
 }
 
-void Program::calculateCycle()
+void Program::RenderLoop()
 {
-	Planets::init(1000);
+	auto lastDisplayTime = std::chrono::high_resolution_clock::now();
+	float targetTime = 1 / 60.0;
+	while (mainWindow.isOpen())
+	{
+		EventHandler::handleEvents(mainWindow);
+		std::cout << "Unlock render" << std::endl;
+
+		Renderer::SubmitImage(mainImage);
+
+		simulationFPSText.setString(std::to_string((int)(1.0f / simulationDeltaTime)));
+		Renderer::SubmitText(simulationFPSText);
+
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		displayDeltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastDisplayTime).count();
+		displayFPSText.setString(std::to_string((int)(1.0f / displayDeltaTime)));
+		Renderer::SubmitText(displayFPSText);
+		std::cout << "Display FPS: " << 1.0f / displayDeltaTime << std::endl;
+
+		Planets::drawFrame();
+
+		Renderer::Render(mainWindow);
+		lastDisplayTime = std::chrono::high_resolution_clock::now();
+
+		// Fix execution speed
+		float timeToTarget = targetTime - displayDeltaTime;
+		if (timeToTarget > 0)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds((int)(timeToTarget * 1000)));
+		}
+	}
+}
+
+void Program::PhysicsLoop()
+{
+	Planets::init(100);
+	float targetTime = 1 / 60.0;
+
+	float waitDeltaTime = 0.0f;
 	while (stopCalculateFlag != true)
 	{
 		Utils::Timer simulationTimer(&simulationDeltaTime);
-		Planets::calculate(simulationDeltaTime);
+		{
+			Utils::Timer simulationTimer(&simulationDeltaTime);
+			Planets::calculate(simulationDeltaTime);
+		}
+		// Fix execution speed
+		float timeToTarget = targetTime - simulationDeltaTime;
+		while (timeToTarget > 0)
+		{
+			Utils::Timer simulationTimer(&waitDeltaTime);
+			timeToTarget -= waitDeltaTime;
+		}
 	}
 }

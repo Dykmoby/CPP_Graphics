@@ -1,10 +1,11 @@
 #include <omp.h>
 
 #include "planets.h"
-#include "utils.h"
+#include "Utils/Random.h"
+#include "Math/Consts.h"
 #include "main.h"
 #include "bodies_simulation.h"
-#include "Rendering/layer.h"
+#include "Rendering/Renderer.h"
 
 Planet* planets;
 unsigned int planetCount = 0;
@@ -22,10 +23,10 @@ void Planets::init(int planetCount)
 
 	for (int i = 0; i < planetCount; i++)
 	{
-		planets[i].pos.x = (float)Utils::getRandomNumber(0, WIDTH - 1);
-		planets[i].pos.y = (float)Utils::getRandomNumber(0, HEIGHT - 1);
+		planets[i].pos.x = (float)Utils::Random::GetRandomNumber(0, WIDTH - 1);
+		planets[i].pos.y = (float)Utils::Random::GetRandomNumber(0, HEIGHT - 1);
 
-		planets[i].radius = Utils::getRandomNumber(1.0f, 4.0f);
+		planets[i].radius = Utils::Random::GetRandomNumber(1.0f, 4.0f);
 		planets[i].mass = Math::PI * planets[i].radius * planets[i].radius;
 	}
 }
@@ -33,11 +34,6 @@ void Planets::init(int planetCount)
 void Planets::calculate(float deltaTime)
 {
 	BodiesSimulation::standard(planets, planetCount, deltaTime);
-
-	if (frameIsReady == false)
-	{
-		drawFrame();
-	}
 }
 
 void Planets::drawFrame()
@@ -68,6 +64,5 @@ void Planets::drawFrame()
 		}
 	}
 
-	layers.push_back(new LayerImage(image));
-	frameIsReady = true;
+	Renderer::SubmitImage(image);
 }

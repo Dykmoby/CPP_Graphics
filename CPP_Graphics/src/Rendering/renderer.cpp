@@ -1,65 +1,55 @@
-#include <vector>
-
 #include "renderer.h"
-#include "layer.h"
+#include "RenderCommands.h"
+#include <list>
 
-using namespace sf;
-
-void Renderer::drawImage(RenderWindow &window, Image image)
+struct RendererData
 {
-	Texture texture;
-	Sprite sprite;
-	texture.loadFromImage(image);
+	std::list<SpriteDrawCommand> spriteCommands;
+	std::list<TextDrawCommand> textCommands;
+};
+RendererData rendererData;
+
+void Renderer::SubmitImage(const sf::Image& image)
+{
+	sf::Texture* texture = new sf::Texture();
+	sf::Sprite sprite;
+	texture->loadFromImage(image);
+	sprite.setTexture(*texture, true);
+	
+	SubmitSprite(sprite);
+}
+
+void Renderer::SubmitTexture(const sf::Texture& texture)
+{
+	sf::Sprite sprite;
 	sprite.setTexture(texture);
 
-	drawSprite(window, sprite);
+	SubmitSprite(sprite);
 }
 
-void Renderer::drawTexture(RenderWindow& window, Texture texture)
+void Renderer::SubmitSprite(const sf::Sprite& sprite)
 {
-	Sprite sprite;
-	sprite.setTexture(texture);
-
-	drawSprite(window, sprite);
+	rendererData.spriteCommands.push_back(SpriteDrawCommand(sprite));
 }
 
-void Renderer::drawSprite(RenderWindow& window, Sprite sprite)
+void Renderer::SubmitText(const sf::Text& text)
 {
-	window.draw(sprite);
+	rendererData.textCommands.push_back(TextDrawCommand(text));
 }
 
-void Renderer::drawText(RenderWindow& window, Text text)
-{
-	window.draw(text);
-}
-
-void Renderer::displayLayers(RenderWindow& window, std::vector<Layer*> layerVector)
+void Renderer::Render(sf::RenderWindow& window)
 {
 	window.clear();
-	for (Layer* layer : layerVector)
+	for (SpriteDrawCommand command : rendererData.spriteCommands)
 	{
-		switch (layer->getType()) {
-		case LayerType::IMAGE: {
-			LayerImage* layerImage = dynamic_cast<LayerImage*>(layer);
-			drawImage(window, layerImage->image);
-			break;
-		}
-		case LayerType::TEXTURE: {
-			LayerTexture* layerTexture = dynamic_cast<LayerTexture*>(layer);
-			drawTexture(window, layerTexture->texture);
-			break;
-		}
-		case LayerType::SPRITE: {
-			LayerSprite* layerSprite = dynamic_cast<LayerSprite*>(layer);
-			drawSprite(window, layerSprite->sprite);
-			break;
-		}
-		case LayerType::TEXT: {
-			LayerText* layerText = dynamic_cast<LayerText*>(layer);
-			drawText(window, layerText->text);
-			break;
-		}
-		}
+		window.draw(command.sprite);
+	}
+
+	for (TextDrawCommand command : rendererData.textCommands)
+	{
+		window.draw(command.text);
 	}
 	window.display();
+	rendererData.spriteCommands.clear();
+	rendererData.textCommands.clear();
 }

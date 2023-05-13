@@ -1,8 +1,6 @@
 #pragma once
 #include "planets.h"
 
-const float G = 6.6743015E-11f;
-
 class BodiesSimulation
 {
 public:

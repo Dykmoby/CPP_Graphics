@@ -78,7 +78,7 @@ project "CPP_Graphics"
 			'{COPYFILE} "../vendor/SFML/bin/openal32.dll" "%{cfg.targetdir}/"',
 			'{COPYFILE} "../vendor/SFML/bin/**-d-2.dll" "%{cfg.targetdir}/"',
 			'{MKDIR} "%{cfg.targetdir}/fonts/"',
-			'{COPYFILE} "../vendor/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
+			'{COPYFILE} "../CPP_Graphics/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
 		}
 		libSuffix = "-d"
 		links { 
@@ -93,7 +93,7 @@ project "CPP_Graphics"
 			'{COPYFILE} "../vendor/SFML/bin/openal32.dll" "%{cfg.targetdir}/"',
 			'{COPYFILE} "../vendor/SFML/bin/**-2.dll" "%{cfg.targetdir}/"',
 			'{MKDIR} "%{cfg.targetdir}/fonts/"',
-			'{COPYFILE} "../vendor/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
+			'{COPYFILE} "../CPP_Graphics/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
 			--'{DELETE} "{cfg.targetdir}/**-d-2.dll"',
 		}
 		libSuffix = ""

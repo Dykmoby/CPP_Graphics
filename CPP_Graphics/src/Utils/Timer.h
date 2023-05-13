@@ -6,7 +6,7 @@ namespace Utils
 	class Timer
 	{
 	public:
-		Timer(float* deltaTime) 
+		Timer(double* deltaTime)
 		{
 			this->deltaTime = deltaTime;
 			start_time = std::chrono::high_resolution_clock::now();
@@ -14,10 +14,10 @@ namespace Utils
 		~Timer() 
 		{
 			current_time = std::chrono::high_resolution_clock::now();
-			*deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
+			*deltaTime = std::chrono::duration<double, std::chrono::seconds::period>(current_time - start_time).count();
 		}
 	private:
-		float* deltaTime;
+		double* deltaTime;
 		std::chrono::steady_clock::time_point start_time;
 		std::chrono::steady_clock::time_point current_time;
 	};

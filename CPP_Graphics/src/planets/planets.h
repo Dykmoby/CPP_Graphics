@@ -4,9 +4,12 @@
 class Planets
 {
 public:
-    static void init(int planetCount);
-    static void calculate(float deltaTime);
+    static void init(int planetCount, int imageWidth, int imageHeight);
+    static void calculate(double deltaTime);
     static void drawFrame();
+private:
+	static int s_imageWidth;
+	static int s_imageHeight;
 };
 
 struct Planet {

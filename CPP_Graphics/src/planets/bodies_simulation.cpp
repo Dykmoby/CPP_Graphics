@@ -1,8 +1,8 @@
+#include "bodies_simulation.h"
+#include "Math/Consts.h"
 #include <cmath>
 
-#include "bodies_simulation.h"
-
-void BodiesSimulation::standard(Planet *planets, unsigned int planetCount, float deltaTime)
+void BodiesSimulation::standard(Planet *planets, unsigned int planetCount, double deltaTime)
 {
 #pragma omp parallel for
 	for (unsigned int i = 0; i < planetCount; i++)
@@ -45,7 +45,7 @@ void BodiesSimulation::standard(Planet *planets, unsigned int planetCount, float
 			Math::Vector2f direction = delta;
 			direction.normalize();
 
-			float velocity = (float)(100000000000 * G * planets[k].mass * invDistanceSqr);
+			float velocity = (float)(100000000000 * Math::G * planets[k].mass * invDistanceSqr);
 			velocity *= deltaTime * deltaTime;
 
 			planets[i].vel = planets[i].vel + direction * velocity;

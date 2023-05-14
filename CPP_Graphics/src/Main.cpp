@@ -5,10 +5,10 @@
 #include <iostream>
 #include <future>
 
-#include "Rendering/renderer.h"
+#include "Rendering/Renderer.h"
 #include "Utils/Timer.h"
 
-#include "planets/planets.h"
+#include "Planets/Planets.h"
 #include "Window.h"
 
 
@@ -63,7 +63,7 @@ protected:
 
 	void PhysicsLoop()
 	{
-		double targetTime = 1000.0 / 60;
+		double targetTime = 1000.0 / 1200;
 		double sleepDeltaTime = 0.0f;
 		while (stopCalculateFlag != true)
 		{

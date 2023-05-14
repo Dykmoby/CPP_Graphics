@@ -1,9 +1,9 @@
 #include <omp.h>
 
-#include "planets.h"
+#include "Planets.h"
 #include "Utils/Random.h"
 #include "Math/Consts.h"
-#include "bodies_simulation.h"
+#include "BodiesSimulation.h"
 #include "Rendering/Renderer.h"
 
 Planet* planets;

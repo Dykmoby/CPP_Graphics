@@ -1,4 +1,4 @@
-#include "bodies_simulation.h"
+#include "BodiesSimulation.h"
 #include "Math/Consts.h"
 #include <cmath>
 

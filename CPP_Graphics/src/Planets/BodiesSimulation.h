@@ -1,5 +1,5 @@
 #pragma once
-#include "planets.h"
+#include "Planets.h"
 
 class BodiesSimulation
 {

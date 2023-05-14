@@ -63,24 +63,28 @@ protected:
 
 	void PhysicsLoop()
 	{
-		double targetTime = 1000.0 / 1200;
+		double targetTime = 1.0 / 60;
 		double sleepDeltaTime = 0.0f;
 		while (stopCalculateFlag != true)
 		{
 			Utils::Timer simulationTimer(&simulationDeltaTime);
+			Utils::Timer sleepTimer(&sleepDeltaTime);
+
 			Planets::calculate(simulationDeltaTime);
+			sleepTimer.~Timer();
 
 			// regulate the physics loop to run at the desired FPS
-			double sleep_time = targetTime - simulationDeltaTime;
+			double sleep_time = targetTime - sleepDeltaTime;
 			if (sleep_time > 0)
 			{
-				std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(sleep_time));
+				std::this_thread::sleep_for(std::chrono::duration<double>(sleep_time));
 			}
 		}
 	}
 
 	void OnClose() override
 	{
+		stopCalculateFlag = true;
 		physicsThread.join();
 	}
 

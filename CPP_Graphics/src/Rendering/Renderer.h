@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <list>
 
 class Renderer {
 public:
@@ -8,4 +9,6 @@ public:
 	static void SubmitSprite(const sf::Sprite& sprite);
 	static void SubmitText(const sf::Text& text);
 	static void Render(sf::RenderWindow& window);
+private:
+	static std::list<sf::Texture*> textures;
 };

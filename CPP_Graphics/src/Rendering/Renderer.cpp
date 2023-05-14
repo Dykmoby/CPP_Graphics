@@ -9,13 +9,16 @@ struct RendererData
 };
 RendererData rendererData;
 
+std::list<sf::Texture*> Renderer::textures;
+
 void Renderer::SubmitImage(const sf::Image& image)
 {
 	sf::Texture* texture = new sf::Texture();
 	sf::Sprite sprite;
 	texture->loadFromImage(image);
 	sprite.setTexture(*texture, true);
-	
+
+	textures.push_back(texture);
 	SubmitSprite(sprite);
 }
 
@@ -50,6 +53,12 @@ void Renderer::Render(sf::RenderWindow& window)
 		window.draw(command.text);
 	}
 	window.display();
+
 	rendererData.spriteCommands.clear();
 	rendererData.textCommands.clear();
+	for (sf::Texture* texture : textures)
+	{
+		delete texture;
+	}
+	textures.clear();
 }

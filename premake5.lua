@@ -76,7 +76,7 @@ project "CPP_Graphics"
 		symbols "On"
 		postbuildcommands {
 			'{COPYFILE} "../vendor/SFML/bin/openal32.dll" "%{cfg.targetdir}/"',
-			'{COPYFILE} "../vendor/SFML/bin/**-d-2.dll" "%{cfg.targetdir}/"',
+			'{COPYFILE} "../vendor/SFML/bin/debug/**-d-2.dll" "%{cfg.targetdir}/"',
 			'{MKDIR} "%{cfg.targetdir}/fonts/"',
 			'{COPYFILE} "../CPP_Graphics/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
 		}
@@ -91,10 +91,9 @@ project "CPP_Graphics"
 		optimize "On"
 		postbuildcommands {
 			'{COPYFILE} "../vendor/SFML/bin/openal32.dll" "%{cfg.targetdir}/"',
-			'{COPYFILE} "../vendor/SFML/bin/**-2.dll" "%{cfg.targetdir}/"',
+			'{COPYFILE} "../vendor/SFML/bin/release/**-2.dll" "%{cfg.targetdir}/"',
 			'{MKDIR} "%{cfg.targetdir}/fonts/"',
 			'{COPYFILE} "../CPP_Graphics/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
-			--'{DELETE} "{cfg.targetdir}/**-d-2.dll"',
 		}
 		libSuffix = ""
 		links { 

@@ -12,7 +12,7 @@ unsigned int planetCount = 0;
 int Planets::s_imageWidth;
 int Planets::s_imageHeight;
 
-void Planets::init(int planetCount, int imageWidth, int imageHeight)
+void Planets::init(unsigned int planetCount, unsigned int imageWidth, unsigned int imageHeight)
 {
 	if (planetCount > 0)
 	{
@@ -24,7 +24,7 @@ void Planets::init(int planetCount, int imageWidth, int imageHeight)
 	planets = new Planet[planetCount];
 	::planetCount = planetCount;
 
-	for (int i = 0; i < planetCount; i++)
+	for (unsigned int i = 0; i < planetCount; i++)
 	{
 		planets[i].pos.x = (float)Utils::Random::GetRandomNumber(0, imageWidth - 1);
 		planets[i].pos.y = (float)Utils::Random::GetRandomNumber(0, imageHeight - 1);
@@ -59,7 +59,7 @@ void Planets::drawFrame()
 					if (x * x + y * y <= radiusSqr) {
 						if (x + planets[i].pos.x > 0 && x + planets[i].pos.x < s_imageWidth && y + planets[i].pos.y > 0 && y + planets[i].pos.y < s_imageHeight)
 						{
-							image.setPixel(x + planets[i].pos.x, y + planets[i].pos.y, color);
+							image.setPixel((unsigned int)(x + planets[i].pos.x), (unsigned int)(y + planets[i].pos.y), color);
 						}
 					}
 				}

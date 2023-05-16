@@ -49,7 +49,7 @@ namespace Math
 	{
 		float dx = vector2.x - vector1.x;
 		float dy = vector2.y - vector1.y;
-		return sqrt(dx * dx + dy * dy);
+		return (float) sqrt(dx * dx + dy * dy);
 	}
 
 	float Vector2f::distanceSqr(const Vector2f& vector1, const Vector2f& vector2)
@@ -76,6 +76,6 @@ namespace Math
 
 	float Vector2f::getLength() const
 	{
-		return sqrt(x * x + y * y);
+		return (float) sqrt(x * x + y * y);
 	}
 }

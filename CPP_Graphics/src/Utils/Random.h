@@ -18,7 +18,7 @@ namespace Utils
 		{
 			std::uniform_real_distribution<> dis(from, to);
 			std::mt19937 rnd((unsigned int)std::chrono::steady_clock::now().time_since_epoch().count());
-			return dis(rnd);
+			return (float)dis(rnd);
 		}
 	};
 }

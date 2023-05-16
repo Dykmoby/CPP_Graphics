@@ -46,7 +46,7 @@ void BodiesSimulation::standard(Planet *planets, unsigned int planetCount, doubl
 			direction.normalize();
 
 			float velocity = (float)(100000000000 * Math::G * planets[k].mass * invDistanceSqr);
-			velocity *= deltaTime * deltaTime;
+			velocity *= (float) (deltaTime * deltaTime);
 
 			planets[i].vel = planets[i].vel + direction * velocity;
 

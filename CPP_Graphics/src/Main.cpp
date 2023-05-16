@@ -10,13 +10,14 @@
 
 #include "Planets/Planets.h"
 #include "Window.h"
+#include "Utils/Config.h"
 
 
 
 class SimulationWindow : public Window
 {
 public:
-	SimulationWindow() : Window("Simulation", 800, 600) {}
+	SimulationWindow() : Window("Simulation", Config::Get()->windowWidth, Config::Get()->windowHeight) {}
 protected:
 	void Initialize() override
 	{
@@ -27,18 +28,18 @@ protected:
 		font.loadFromFile(fontPath);
 		simulationFPSText.setFont(font);
 		simulationFPSText.setCharacterSize(15);
-		simulationFPSText.setColor(sf::Color::Green);
+		simulationFPSText.setFillColor(sf::Color::Green);
 		simulationFPSText.setPosition(10, 10);
 
 		displayFPSText.setFont(font);
 		displayFPSText.setCharacterSize(15);
-		displayFPSText.setColor(sf::Color::Green);
+		displayFPSText.setFillColor(sf::Color::Green);
 		displayFPSText.setPosition(10, 30);
 
 		stopCalculateFlag = false;
 
 		// TODO: job system (AddJob)
-		Planets::init(1000, m_width, m_height);
+		Planets::init(Config::Get()->planetCount, m_width, m_height);
 		physicsThread = std::thread(&SimulationWindow::PhysicsLoop, this);
 	}
 
@@ -103,6 +104,7 @@ private:
 
 int main()
 {
+	Config::Load();
 	SimulationWindow window;
 	window.Start();
 	return 0;

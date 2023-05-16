@@ -13,12 +13,12 @@ protected:
 public:
 	Window() : m_width(800), m_height(600), m_title("Default name")
 	{
-		m_window = new sf::RenderWindow(sf::VideoMode(m_width, m_height), m_title);
+		m_window = new sf::RenderWindow(sf::VideoMode(m_width, m_height), m_title, sf::Style::Close);
 	}
 
 	Window(const char* title, int width, int height) : m_width(width), m_height(height), m_title(title)
 	{
-		m_window = new sf::RenderWindow(sf::VideoMode(m_width, m_height), m_title);
+		m_window = new sf::RenderWindow(sf::VideoMode(m_width, m_height), m_title, sf::Style::Close);
 	}
 
 	~Window()
@@ -34,7 +34,7 @@ public:
 		{
 			Utils::Timer deltaTimeTimer(&m_deltaTime);
 			HandleEvents();
-			Update(m_deltaTime);
+			Update((float) m_deltaTime);
 		}
 	}
 protected:

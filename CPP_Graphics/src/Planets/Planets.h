@@ -4,7 +4,7 @@
 class Planets
 {
 public:
-    static void init(int planetCount, int imageWidth, int imageHeight);
+    static void init(unsigned int planetCount, unsigned int imageWidth, unsigned int imageHeight);
     static void calculate(double deltaTime);
     static void drawFrame();
 private:

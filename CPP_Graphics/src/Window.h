@@ -1,6 +1,8 @@
 #pragma once
 #include "Utils/Timer.h"
 #include <SFML/Graphics.hpp>
+#include <imgui.h>
+#include <imgui-SFML.h>
 
 class Window
 {
@@ -30,16 +32,19 @@ public:
 	void Start()
 	{
 		Initialize();
+		sf::Clock deltaClock;
 		while (m_window->isOpen())
 		{
-			Utils::Timer deltaTimeTimer(&m_deltaTime);
 			HandleEvents();
-			Update((float) m_deltaTime);
+			if (m_window->isOpen())
+			{
+				Update(deltaClock.restart());
+			}
 		}
 	}
 protected:
 	virtual void Initialize() {}
-	virtual void Update(float deltaTime) {}
+	virtual void Update(sf::Time deltaTime) {}
 	virtual void ProcessEvent(sf::Event event) {}
 	virtual void OnClose() {}
 private:

@@ -39,7 +39,7 @@ void Planets::calculate(double deltaTime)
 	BodiesSimulation::standard(planets, planetCount, deltaTime);
 }
 
-void Planets::drawFrame()
+void Planets::DrawFrame()
 {
 	sf::Image image;
 	image.create(s_imageWidth, s_imageHeight, sf::Color::Color(255, 255, 255, 0));

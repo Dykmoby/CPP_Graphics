@@ -24,6 +24,7 @@ protected:
 		std::shared_ptr<Utils::Config> cfg = Utils::Config::Load("config.yaml");
 
 		m_window->setFramerateLimit(60);
+		ImGui::SFML::Init(*m_window);
 
 		mainImage.create(m_width, m_height, sf::Color::Color(2, 5, 20));
 
@@ -45,22 +46,30 @@ protected:
 		physicsThread = std::thread(&SimulationWindow::PhysicsLoop, this);
 	}
 
-	void Update(float deltaTime) override
+	void Update(sf::Time deltaTime) override
 	{
 		RenderLoop(deltaTime);
 	}
 
-	void RenderLoop(float deltaTime)
+	void RenderLoop(sf::Time deltaTime)
 	{
 		Renderer::SubmitImage(mainImage);
 
 		simulationFPSText.setString(std::to_string((int)(1.0f / simulationDeltaTime)));
 		Renderer::SubmitText(simulationFPSText);
 
-		displayFPSText.setString(std::to_string((int)(1.0f / deltaTime)));
+		displayFPSText.setString(std::to_string((int)(1.0f / deltaTime.asSeconds())));
 		Renderer::SubmitText(displayFPSText);
 
-		Planets::drawFrame();
+		Planets::DrawFrame();
+
+		ImGui::SFML::Update(*m_window, deltaTime);
+		ImGui::ShowDemoWindow();
+
+		ImGui::Begin("Hello, world!");
+		ImGui::Button("Look at this pretty button");
+		ImGui::End();
+
 		Renderer::Render(*m_window);
 	}
 
@@ -85,10 +94,17 @@ protected:
 		}
 	}
 
+	void ProcessEvent(sf::Event event) override
+	{
+		ImGui::SFML::ProcessEvent(*m_window, event);
+	}
+
 	void OnClose() override
 	{
 		stopCalculateFlag = true;
 		physicsThread.join();
+
+		ImGui::SFML::Shutdown();
 	}
 
 private:

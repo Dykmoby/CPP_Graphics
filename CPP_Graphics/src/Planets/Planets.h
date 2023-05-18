@@ -6,7 +6,7 @@ class Planets
 public:
     static void init(unsigned int planetCount, unsigned int imageWidth, unsigned int imageHeight);
     static void calculate(double deltaTime);
-    static void drawFrame();
+    static void DrawFrame();
 private:
 	static int s_imageWidth;
 	static int s_imageHeight;

@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include "RenderCommands.h"
 #include <list>
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 struct RendererData
 {
@@ -52,6 +54,9 @@ void Renderer::Render(sf::RenderWindow& window)
 	{
 		window.draw(command.text);
 	}
+
+	ImGui::SFML::Render(window);
+
 	window.display();
 
 	rendererData.spriteCommands.clear();

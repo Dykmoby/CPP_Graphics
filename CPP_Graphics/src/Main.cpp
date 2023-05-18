@@ -13,14 +13,16 @@
 #include "Utils/Config.h"
 
 
-
 class SimulationWindow : public Window
 {
 public:
-	SimulationWindow() : Window("Simulation", Config::Get()->windowWidth, Config::Get()->windowHeight) {}
+	SimulationWindow() : Window("Simulation", 800, 600) {}
+	SimulationWindow(const char* title, int width, int height) : Window(title, width, height) {}
 protected:
 	void Initialize() override
 	{
+		std::shared_ptr<Utils::Config> cfg = Utils::Config::Load("config.yaml");
+
 		m_window->setFramerateLimit(60);
 
 		mainImage.create(m_width, m_height, sf::Color::Color(2, 5, 20));
@@ -39,7 +41,7 @@ protected:
 		stopCalculateFlag = false;
 
 		// TODO: job system (AddJob)
-		Planets::init(Config::Get()->planetCount, m_width, m_height);
+		Planets::init(cfg->GetInt("planets_count"), m_width, m_height);
 		physicsThread = std::thread(&SimulationWindow::PhysicsLoop, this);
 	}
 
@@ -104,8 +106,9 @@ private:
 
 int main()
 {
-	Config::Load();
-	SimulationWindow window;
+	std::shared_ptr<Utils::Config> cfg = Utils::Config::Load(Utils::Config::DEFAULT_CONFIG_PATH.c_str());
+
+	SimulationWindow window("Simulation", cfg->GetInt("window_width"), cfg->GetInt("window_height"));
 	window.Start();
 	return 0;
 }

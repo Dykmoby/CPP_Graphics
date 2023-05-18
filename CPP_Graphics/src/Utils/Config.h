@@ -1,42 +1,25 @@
 #pragma once
 
-#include <iostream>
-#include <fstream>
-#include <string>
+#include <memory>
+#include "yaml-cpp/yaml.h"
 
-class Config
+namespace Utils
 {
-public:
-	static Config* Get();
-	static bool Load(std::string configPath = p_defaultConfigPath);
-
-	unsigned int planetCount = 0;
-	unsigned int windowWidth = 800;
-	unsigned int windowHeight = 600;
-private:
-	Config() {}
-	static Config* p_instance;
-
-	static inline const std::string p_defaultConfigPath = "config.txt";
-
-	static std::string RemoveSpaces(std::string inputStr)
+	class Config
 	{
-        bool b_insideQuotes = false;
-        std::string result = "";
+	public:
+		static std::shared_ptr<Config> Load(std::string configPath);
 
-        for (char c : inputStr) {
-            if (c == '"') {
-                b_insideQuotes = !b_insideQuotes;
-                result += c;
-            }
-            else if (!b_insideQuotes && c == ' ') {
-                continue;
-            }
-            else {
-                result += c;
-            }
-        }
+		int GetInt(const char* key) const;
+		float GetFloat(const char* key) const;
+		double GetDouble(const char* key) const;
+		std::string GetString(const char* key) const;
 
-        return result;
-	}
-};
+		static const std::string DEFAULT_CONFIG_PATH;
+	private:
+		Config(YAML::Node node): p_node(node) {}
+		static void CreateDefault(const char* name);
+
+		YAML::Node p_node;
+	};
+}

@@ -15,9 +15,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["SFML"] = "vendor/SFML/include"
+IncludeDir["YAML_CPP"] = "vendor/YAML_CPP/include"
 
 LibDir = {}
 LibDir["SFML"] = "vendor/SFML/lib"
+LibDir["YAML_CPP"] = "vendor/YAML_CPP/lib"
 
 group "Dependencies"
 -- Includes go here
@@ -43,11 +45,13 @@ project "CPP_Graphics"
 	includedirs {
 		"CPP_Graphics/src",
 		"%{IncludeDir.SFML}",
+		"%{IncludeDir.YAML_CPP}",
 	}
 
 
 	libdirs { 
-		"%{LibDir.SFML}"
+		"%{LibDir.SFML}",
+		"%{LibDir.YAML_CPP}",
 	}
 
 	links {
@@ -84,7 +88,8 @@ project "CPP_Graphics"
 		links { 
 			"sfml-graphics" .. libSuffix,
 			"sfml-window" .. libSuffix,
-			"sfml-system" .. libSuffix
+			"sfml-system" .. libSuffix,
+			"yaml-cppd"
 		}
 
 	filter "configurations:Release"
@@ -99,7 +104,8 @@ project "CPP_Graphics"
 		links { 
 			"sfml-graphics" .. libSuffix,
 			"sfml-window" .. libSuffix,
-			"sfml-system" .. libSuffix
+			"sfml-system" .. libSuffix,
+			"yaml-cpp"
 		}
 
 

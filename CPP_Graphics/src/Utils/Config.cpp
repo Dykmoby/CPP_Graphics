@@ -1,52 +1,72 @@
 #include "Config.h"
 
-#include <map>
+#include <string>
+#include <iostream>
+#include <fstream>
 
-Config* Config::p_instance = nullptr;
-
-Config* Config::Get()
+namespace Utils
 {
-	if (!p_instance)
+	const std::string Config::DEFAULT_CONFIG_PATH = "config.yaml";
+
+	std::shared_ptr<Config> Config::Load(std::string configPath)
 	{
-		p_instance = new Config();
-	}
-	return p_instance;
-}
-
-bool Config::Load(std::string configPath)
-{
-	std::ifstream configFile(configPath);
-	if (!configFile) {
-		std::cout << "Failed to open the config file.\n";
-		return false;
-	}
-
-	Config::Get();
-
-	std::map<std::string, std::string> keysAndValues;
-
-	std::string curLine;
-	while (std::getline(configFile, curLine))
-	{
-		curLine = RemoveSpaces(curLine);
-
-		size_t eqPos = curLine.find('=');
-		if (eqPos == std::string::npos) {
-			continue;
+		std::ifstream file(configPath);
+		if (!file.good())
+		{
+			std::cout << "Failed to load the config file: " + configPath + ".\n";
+			std::cout << "A default config will be created and used instead.";
+			Config::CreateDefault(DEFAULT_CONFIG_PATH.c_str());
+			YAML::Node node = YAML::LoadFile(DEFAULT_CONFIG_PATH.c_str());
+			return std::make_shared<Config>(Config(node));
 		}
 
-		std::string key = curLine.substr(0, eqPos);
-		std::string value = curLine.substr(eqPos + 1);
-
-		keysAndValues.insert(std::pair<std::string, std::string>(key, value));
+		YAML::Node node = YAML::LoadFile(configPath);
+		return std::make_shared<Config>(Config(node));
 	}
 
-	configFile.close();
+	void Config::CreateDefault(const char* name)
+	{
+		YAML::Node node = YAML::Node();
+		node["window_width"] = 800;
+		node["window_height"] = 600;
+		node["planets_count"] = 500;
+		std::ofstream fout(name);
+		fout << node;
+	}
 
-	p_instance->planetCount = std::stoul(keysAndValues.at("planetCount"));
-	p_instance->windowWidth = std::stoul(keysAndValues.at("windowWidth"));
-	p_instance->windowHeight = std::stoul(keysAndValues.at("windowHeight"));
+	int Config::GetInt(const char* key) const
+	{
+		if (p_node && p_node[key])
+		{
+			return p_node[key].as<int>();
+		}
+		return 0;
+	}
 
-	std::cout << "Loaded config: " + configPath + '\n';
-	return true;
+	float Config::GetFloat(const char* key) const
+	{
+		if (p_node[key])
+		{
+			return p_node[key].as<float>();
+		}
+		return 0.0F;
+	}
+
+	double Config::GetDouble(const char* key) const
+	{
+		if (p_node[key])
+		{
+			return p_node[key].as<double>();
+		}
+		return 0.0F;
+	}
+
+	std::string Config::GetString(const char* key) const
+	{
+		if (p_node[key])
+		{
+			return p_node[key].as<std::string>();
+		}
+		return "";
+	}
 }

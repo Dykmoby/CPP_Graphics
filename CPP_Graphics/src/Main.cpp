@@ -94,11 +94,6 @@ protected:
 		}
 	}
 
-	void ProcessEvent(sf::Event event) override
-	{
-		ImGui::SFML::ProcessEvent(*m_window, event);
-	}
-
 	void OnClose() override
 	{
 		stopCalculateFlag = true;
@@ -109,6 +104,8 @@ protected:
 
 	void OnEvent(sf::Event event) override
 	{
+		ImGui::SFML::ProcessEvent(*m_window, event);
+
 		if (event.type == sf::Event::KeyPressed)
 		{
 			if (event.key.code == sf::Keyboard::Num1)

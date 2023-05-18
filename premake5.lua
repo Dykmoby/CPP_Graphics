@@ -33,6 +33,7 @@ project "CPP_Graphics"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++20"
+	staticruntime "On"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -55,7 +56,6 @@ project "CPP_Graphics"
 
 	libdirs { 
 		"%{LibDir.SFML}",
-		"%{LibDir.YAML_CPP}",
 	}
 
 	links {
@@ -68,13 +68,15 @@ project "CPP_Graphics"
 		"opengl32",
 		"freetype",
 		"winmm",
-		"gdi32"
+		"gdi32",
+		"yaml-cpp"
 	}
 
 	defines {
 		--"SFML_STATIC",
 		--"SFML_USE_STATIC_STD_LIBS",
-		--"SFML_STATIC_LIBRARIES"
+		--"SFML_STATIC_LIBRARIES",
+		"YAML_CPP_STATIC_DEFINE"
 	}
 
 	filter "system:windows"
@@ -92,8 +94,7 @@ project "CPP_Graphics"
 		links { 
 			"sfml-graphics" .. libSuffix,
 			"sfml-window" .. libSuffix,
-			"sfml-system" .. libSuffix,
-			"yaml-cppd"
+			"sfml-system" .. libSuffix
 		}
 
 	filter "configurations:Release"
@@ -108,8 +109,7 @@ project "CPP_Graphics"
 		links { 
 			"sfml-graphics" .. libSuffix,
 			"sfml-window" .. libSuffix,
-			"sfml-system" .. libSuffix,
-			"yaml-cpp"
+			"sfml-system" .. libSuffix
 		}
 
 

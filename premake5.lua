@@ -15,16 +15,16 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["SFML"] = "vendor/SFML/include"
-IncludeDir["YAML_CPP"] = "vendor/YAML_CPP/include"
+IncludeDir["YAML_CPP"] = "vendor/yaml-cpp/include"
 IncludeDir["IMGUI"] = "vendor/imgui-1.89.5/include"
 IncludeDir["IMGUI_SFML"] = "vendor/imgui-sfml-2.5/include"
 
 LibDir = {}
 LibDir["SFML"] = "vendor/SFML/lib"
-LibDir["YAML_CPP"] = "vendor/YAML_CPP/lib"
+LibDir["YAML_CPP"] = "vendor/yaml-cpp/lib"
 
 group "Dependencies"
--- Includes go here
+include "vendor/yaml-cpp"
 group ""
 
 

@@ -15,12 +15,16 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["SFML"] = "vendor/SFML/include"
+IncludeDir["YAML_CPP"] = "vendor/yaml-cpp/include"
+IncludeDir["IMGUI"] = "vendor/imgui-1.89.5/include"
+IncludeDir["IMGUI_SFML"] = "vendor/imgui-sfml-2.5/include"
 
 LibDir = {}
 LibDir["SFML"] = "vendor/SFML/lib"
+LibDir["YAML_CPP"] = "vendor/yaml-cpp/lib"
 
 group "Dependencies"
--- Includes go here
+include "vendor/yaml-cpp"
 group ""
 
 
@@ -43,11 +47,15 @@ project "CPP_Graphics"
 	includedirs {
 		"CPP_Graphics/src",
 		"%{IncludeDir.SFML}",
+		"%{IncludeDir.YAML_CPP}",
+		"%{IncludeDir.IMGUI}",
+		"%{IncludeDir.IMGUI_SFML}",
 	}
 
 
 	libdirs { 
-		"%{LibDir.SFML}"
+		"%{LibDir.SFML}",
+		"%{LibDir.YAML_CPP}",
 	}
 
 	links {
@@ -76,7 +84,7 @@ project "CPP_Graphics"
 		symbols "On"
 		postbuildcommands {
 			'{COPYFILE} "../vendor/SFML/bin/openal32.dll" "%{cfg.targetdir}/"',
-			'{COPYFILE} "../vendor/SFML/bin/**-d-2.dll" "%{cfg.targetdir}/"',
+			'{COPYFILE} "../vendor/SFML/bin/debug/**-d-2.dll" "%{cfg.targetdir}/"',
 			'{MKDIR} "%{cfg.targetdir}/fonts/"',
 			'{COPYFILE} "../CPP_Graphics/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
 		}
@@ -84,23 +92,24 @@ project "CPP_Graphics"
 		links { 
 			"sfml-graphics" .. libSuffix,
 			"sfml-window" .. libSuffix,
-			"sfml-system" .. libSuffix
+			"sfml-system" .. libSuffix,
+			"yaml-cppd"
 		}
 
 	filter "configurations:Release"
 		optimize "On"
 		postbuildcommands {
 			'{COPYFILE} "../vendor/SFML/bin/openal32.dll" "%{cfg.targetdir}/"',
-			'{COPYFILE} "../vendor/SFML/bin/**-2.dll" "%{cfg.targetdir}/"',
+			'{COPYFILE} "../vendor/SFML/bin/release/**-2.dll" "%{cfg.targetdir}/"',
 			'{MKDIR} "%{cfg.targetdir}/fonts/"',
 			'{COPYFILE} "../CPP_Graphics/fonts/**.ttf" "%{cfg.targetdir}/fonts/"',
-			--'{DELETE} "{cfg.targetdir}/**-d-2.dll"',
 		}
 		libSuffix = ""
 		links { 
 			"sfml-graphics" .. libSuffix,
 			"sfml-window" .. libSuffix,
-			"sfml-system" .. libSuffix
+			"sfml-system" .. libSuffix,
+			"yaml-cpp"
 		}
 
 

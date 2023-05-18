@@ -20,25 +20,25 @@ public:
 protected:
 	void Initialize() override
 	{
-		m_window->setFramerateLimit(60);
+		m_window->setFramerateLimit(144);
 
 		mainImage.create(m_width, m_height, sf::Color::Color(2, 5, 20));
 
 		font.loadFromFile(fontPath);
 		simulationFPSText.setFont(font);
-		simulationFPSText.setCharacterSize(15);
+		simulationFPSText.setCharacterSize(64);
 		simulationFPSText.setColor(sf::Color::Green);
 		simulationFPSText.setPosition(10, 10);
 
 		displayFPSText.setFont(font);
-		displayFPSText.setCharacterSize(15);
+		displayFPSText.setCharacterSize(64);
 		displayFPSText.setColor(sf::Color::Green);
-		displayFPSText.setPosition(10, 30);
+		displayFPSText.setPosition(10, 90);
 
 		stopCalculateFlag = false;
 
 		// TODO: job system (AddJob)
-		Planets::init(1000, m_width, m_height);
+		Planets::init(10000, m_width, m_height);
 		physicsThread = std::thread(&SimulationWindow::PhysicsLoop, this);
 	}
 
@@ -63,12 +63,13 @@ protected:
 
 	void PhysicsLoop()
 	{
-		double targetTime = 1000.0 / 60;
+		double targetTime = 1000.0 / 1000;
 		double sleepDeltaTime = 0.0f;
 		while (stopCalculateFlag != true)
 		{
 			Utils::Timer simulationTimer(&simulationDeltaTime);
 			Planets::calculate(simulationDeltaTime);
+			std::cout << "Simulation time: " << simulationDeltaTime << std::endl;
 
 			// regulate the physics loop to run at the desired FPS
 			double sleep_time = targetTime - simulationDeltaTime;
@@ -82,6 +83,25 @@ protected:
 	void OnClose() override
 	{
 		physicsThread.join();
+	}
+
+	void OnEvent(sf::Event event) override
+	{
+		if (event.type == sf::Event::KeyPressed)
+		{
+			if (event.key.code == sf::Keyboard::Num1)
+			{
+				Planets::SetComputationMode(CPU_BASIC);
+			}
+			else if (event.key.code == sf::Keyboard::Num2)
+			{
+				Planets::SetComputationMode(CPU_PARALLEL);
+			}
+			else if (event.key.code == sf::Keyboard::Num3)
+			{
+				Planets::SetComputationMode(GPU_PARALLEL);
+			}
+		}
 	}
 
 private:

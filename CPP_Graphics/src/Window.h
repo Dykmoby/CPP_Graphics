@@ -40,7 +40,7 @@ public:
 protected:
 	virtual void Initialize() {}
 	virtual void Update(float deltaTime) {}
-	virtual void ProcessEvent(sf::Event event) {}
+	virtual void OnEvent(sf::Event event) {}
 	virtual void OnClose() {}
 private:
 	void HandleEvents()
@@ -48,7 +48,7 @@ private:
 		sf::Event event;
 		while (m_window->pollEvent(event))
 		{
-			ProcessEvent(event);
+			OnEvent(event);
 			if (event.type == sf::Event::Closed)
 			{
 				OnClose();

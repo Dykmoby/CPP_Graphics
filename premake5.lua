@@ -16,6 +16,8 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["SFML"] = "vendor/SFML/include"
 IncludeDir["YAML_CPP"] = "vendor/YAML_CPP/include"
+IncludeDir["IMGUI"] = "vendor/imgui-1.89.5/include"
+IncludeDir["IMGUI_SFML"] = "vendor/imgui-sfml-2.5/include"
 
 LibDir = {}
 LibDir["SFML"] = "vendor/SFML/lib"
@@ -46,6 +48,8 @@ project "CPP_Graphics"
 		"CPP_Graphics/src",
 		"%{IncludeDir.SFML}",
 		"%{IncludeDir.YAML_CPP}",
+		"%{IncludeDir.IMGUI}",
+		"%{IncludeDir.IMGUI_SFML}",
 	}
 
 
